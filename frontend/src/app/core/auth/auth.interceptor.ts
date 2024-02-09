@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loaderService.show();
+    // this.loaderService.show();
 
     const tokens = this.authService.getTokens();
 
@@ -34,12 +34,12 @@ export class AuthInterceptor implements HttpInterceptor {
             return throwError(() => error);
           }),
           finalize(() => {
-            this.loaderService.hide();
+            // this.loaderService.hide();
           })
         );
     }
     return next.handle(req)
-      .pipe(finalize(() => this.loaderService.hide()));
+      // .pipe(finalize(() => this.loaderService.hide()));
   }
 
 

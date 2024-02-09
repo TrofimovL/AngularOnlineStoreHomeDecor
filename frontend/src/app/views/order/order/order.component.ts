@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CartService} from "../../../shared/services/cart.service";
 import {CartType} from "../../../../types/cart.type";
 import {DefaultResponseType} from "../../../../types/default-response.type";
@@ -14,13 +14,14 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {UserService} from "../../../shared/services/user.service";
 import {UserInfoType} from "../../../../types/user-info.type";
 import {AuthService} from "../../../core/auth/auth.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent implements OnInit, OnDestroy {
 
   deliveryType: DeliveryType = DeliveryType.delivery;
   deliveryTypes = DeliveryType;
@@ -46,6 +47,8 @@ export class OrderComponent implements OnInit {
     comment: ['']
   });
 
+  getCartObserver!: Subscription;
+
   constructor(private cartService: CartService,
               private router: Router,
               private orderService: OrderService,
@@ -59,7 +62,7 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cartService.getCart()
+    this.getCartObserver = this.cartService.getCart()
       .subscribe((data: CartType | DefaultResponseType) => {
         if ((data as DefaultResponseType).error !== undefined) {
           throw new Error((data as DefaultResponseType).message);
@@ -77,9 +80,9 @@ export class OrderComponent implements OnInit {
         this.calculateTotal();
       });
 
-    if(this.authService.getIsLoggedIn()){
+    if (this.authService.getIsLoggedIn()) {
       this.userService.getUserInfo()
-        .subscribe((data: UserInfoType | DefaultResponseType)=>{
+        .subscribe((data: UserInfoType | DefaultResponseType) => {
           if ((data as DefaultResponseType).error !== undefined) {
             throw new Error((data as DefaultResponseType).message);
           }
@@ -101,7 +104,7 @@ export class OrderComponent implements OnInit {
           };
 
           this.orderForm.setValue(paramsToUpdate);
-          if(userInfo.deliveryType){
+          if (userInfo.deliveryType) {
             this.deliveryType = userInfo.deliveryType;
           }
 
@@ -110,7 +113,10 @@ export class OrderComponent implements OnInit {
     }
 
 
+  }
 
+  ngOnDestroy() {
+    this.getCartObserver.unsubscribe();
   }
 
   calculateTotal() {
@@ -163,22 +169,22 @@ export class OrderComponent implements OnInit {
         email: this.orderForm.value.email,
       };
 
-      if(this.deliveryType === DeliveryType.delivery){
-        if(this.orderForm.value.street){
+      if (this.deliveryType === DeliveryType.delivery) {
+        if (this.orderForm.value.street) {
           paramsObject.street = this.orderForm.value.street;
         }
-        if(this.orderForm.value.apartment){
+        if (this.orderForm.value.apartment) {
           paramsObject.apartment = this.orderForm.value.apartment;
         }
-        if(this.orderForm.value.house){
+        if (this.orderForm.value.house) {
           paramsObject.house = this.orderForm.value.house;
         }
-        if(this.orderForm.value.entrance){
+        if (this.orderForm.value.entrance) {
           paramsObject.entrance = this.orderForm.value.entrance;
         }
       }
 
-      if(this.orderForm.value.comment){
+      if (this.orderForm.value.comment) {
         paramsObject.comment = this.orderForm.value.comment;
       }
 
@@ -208,7 +214,7 @@ export class OrderComponent implements OnInit {
         });
 
 
-    }else{
+    } else {
       this.orderForm.markAllAsTouched();
       this._snackBar.open('Заполните необходимые поля');
     }
