@@ -1,5 +1,4 @@
 # Проект интернет-магазина на Angular для продажи домашнего декора и различных растений.
-Реализована фронтэнд-часть. Бэкэнд (Node.js) был предоставлен в рамках курса.
 
 Ссылка на видеообзор сайта:
 https://mephiru-my.sharepoint.com/:v:/g/personal/tle001_stud_mephi_ru/EYQLbuCuKD5FvDt7MPldAIEBWRFPt0IPgs6spcss3lyKMw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=hDB6yh
